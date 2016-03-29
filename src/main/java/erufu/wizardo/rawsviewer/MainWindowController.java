@@ -1,5 +1,6 @@
 package erufu.wizardo.rawsviewer;
 
+import erufu.wizardo.rawsviewer.manager.DefaultImageFactory;
 import erufu.wizardo.rawsviewer.manager.FileManager;
 import erufu.wizardo.rawsviewer.manager.ScalingManager;
 import java.io.File;
@@ -92,7 +93,7 @@ public class MainWindowController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        fileManager = new FileManager();
+        fileManager = new FileManager(new DefaultImageFactory());
         scalingManager = ScalingManager.builder().build(statusText).build(viewPort).build(fileManager).getInstance();
         scalingManager.updateStatusText();
     }

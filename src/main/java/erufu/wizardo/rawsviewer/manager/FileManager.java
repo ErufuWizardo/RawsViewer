@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package erufu.wizardo.rawsviewer.manager;
 
 import erufu.wizardo.rawsviewer.ExecutionHelper;
@@ -18,7 +13,12 @@ public class FileManager {
     public static final String NO_FILE_LOADED_STRING = "No file loaded";
 
     private Image currentImage;
-
+    private final ImageFactory imageFactory;
+    
+    public FileManager(ImageFactory imageFactory){
+        this.imageFactory = imageFactory;
+    }
+    
     public String getFilePath() {
         return filePath;
     }
@@ -29,7 +29,7 @@ public class FileManager {
 
     public Image loadImage(File file) {
         executionHelper.executeWithExceptionPropagation(() -> {
-            final Image image = new Image(new FileInputStream(file));
+            final Image image = imageFactory.getImage(new FileInputStream(file));
             setCurrentImage(image);
         });
         filePath = file.getAbsolutePath();
