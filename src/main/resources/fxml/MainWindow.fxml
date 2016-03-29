@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane onKeyPressed="#onKeyPressed" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onDragDropped="#onDragDropped" onDragOver="#onDragOver" prefHeight="250.0" prefWidth="250.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="erufu.wizardo.rawsviewer.MainWindowController">
+    <top>
+        <HBox BorderPane.alignment="CENTER">
+            <children>
+                <Button mnemonicParsing="false" text="Open" />
+                <Button mnemonicParsing="false" onAction="#scaleUp" text="(+)" />
+                <Button mnemonicParsing="false" onAction="#scaleDown" text="(-)" />
+                <Button mnemonicParsing="false" onAction="#scaleToActualSize" text="100%" />
+            </children>
+        </HBox>
+    </top>
+    <bottom>
+        <HBox BorderPane.alignment="CENTER">
+            <children>
+                <Label fx:id="statusText" />
+            </children>
+        </HBox>
+    </bottom>
+    <center>
+        <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED"  vbarPolicy="AS_NEEDED">
+            <content>
+                <StackPane fx:id="stackPane">
+                    <children>
+                        <Group>
+                            <children>
+                                <ImageView fx:id="viewPort" cache="true" smooth="false" />
+                            </children>
+                        </Group>
+                    </children>
+                </StackPane>         
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>
