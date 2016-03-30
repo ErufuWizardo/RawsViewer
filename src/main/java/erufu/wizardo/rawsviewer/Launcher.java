@@ -1,5 +1,6 @@
 package erufu.wizardo.rawsviewer;
 
+import erufu.wizardo.rawsviewer.db.HibernateUtil;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
@@ -7,20 +8,24 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
 public class Launcher extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainWindow.fxml"));
-        
+
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
-        
+
         stage.setTitle("RawsViewer");
         stage.setScene(scene);
         stage.show();
-    
+
+    }
+
+    @Override
+    public void stop() {
+        HibernateUtil.shutdown();
     }
 
     /**

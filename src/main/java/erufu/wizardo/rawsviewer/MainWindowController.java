@@ -1,12 +1,12 @@
 package erufu.wizardo.rawsviewer;
 
-import erufu.wizardo.rawsviewer.db.HibernateUtil;
 import erufu.wizardo.rawsviewer.manager.DefaultImageFactory;
 import erufu.wizardo.rawsviewer.manager.FileManager;
 import erufu.wizardo.rawsviewer.manager.ScalingManager;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,7 +16,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
@@ -42,6 +41,12 @@ public class MainWindowController implements Initializable {
     @FXML
     private ImageView viewPort;
 
+    private final Consumer<Image> imageUpdateConsumer = (image) -> {
+        viewPort.setImage(image);
+        scalingManager.updateViewportScale();
+        scalingManager.updateStatusText();
+    };
+
     @FXML
     void onDragOver(DragEvent event) {
         final Dragboard dragboard = event.getDragboard();
@@ -59,13 +64,10 @@ public class MainWindowController implements Initializable {
             final int lastFileIndex = dragboard.getFiles().size() - 1;
             final File file = dragboard.getFiles().get(lastFileIndex);
 
-            final Image image = fileManager.loadImage(file);
-            viewPort.setImage(image);
+            fileManager.loadImage(file).ifPresent(imageUpdateConsumer);
         }
         event.setDropCompleted(true);
         event.consume();
-        scalingManager.resetScale();
-        scalingManager.updateStatusText();
     }
 
     @FXML
@@ -80,11 +82,25 @@ public class MainWindowController implements Initializable {
 
     @FXML
     void onKeyPressed(KeyEvent keyEvent) {
-        if (keyEvent.getCode() == KeyCode.ADD) {
-            scalingManager.scaleUp();
-        } else if (keyEvent.getCode() == KeyCode.SUBTRACT) {
-            scalingManager.scaleDown();
+        switch (keyEvent.getCode()) {
+            case ADD:
+                scalingManager.scaleUp();
+                keyEvent.consume();
+                break;
+            case SUBTRACT:
+                scalingManager.scaleDown();
+                keyEvent.consume();
+                break;
+            case LEFT:
+                fileManager.backward().ifPresent(imageUpdateConsumer);
+                keyEvent.consume();
+                break;
+            case RIGHT:
+                fileManager.forward().ifPresent(imageUpdateConsumer);
+                keyEvent.consume();
+                break;
         }
+
     }
 
     @FXML
@@ -98,5 +114,4 @@ public class MainWindowController implements Initializable {
         scalingManager = ScalingManager.builder().build(statusText).build(viewPort).build(fileManager).getInstance();
         scalingManager.updateStatusText();
     }
-
 }
