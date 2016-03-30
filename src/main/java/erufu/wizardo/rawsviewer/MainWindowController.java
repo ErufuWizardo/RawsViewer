@@ -1,5 +1,6 @@
 package erufu.wizardo.rawsviewer;
 
+import erufu.wizardo.rawsviewer.db.HibernateUtil;
 import erufu.wizardo.rawsviewer.manager.DefaultImageFactory;
 import erufu.wizardo.rawsviewer.manager.FileManager;
 import erufu.wizardo.rawsviewer.manager.ScalingManager;
