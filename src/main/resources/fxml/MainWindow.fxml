@@ -7,14 +7,67 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane onKeyPressed="#onKeyPressed" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onDragDropped="#onDragDropped" onDragOver="#onDragOver" prefHeight="250.0" prefWidth="250.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="erufu.wizardo.rawsviewer.MainWindowController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onKeyPressed="#onKeyPressed" prefHeight="250.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="erufu.wizardo.rawsviewer.MainWindowController">
     <top>
         <HBox BorderPane.alignment="CENTER">
             <children>
-                <Button mnemonicParsing="false" text="Open" />
-                <Button mnemonicParsing="false" onAction="#scaleUp" text="(+)" />
-                <Button mnemonicParsing="false" onAction="#scaleDown" text="(-)" />
-                <Button mnemonicParsing="false" onAction="#scaleToActualSize" text="100%" />
+                <Button onAction="#openImage">
+                    <graphic>
+                        <ImageView preserveRatio="true">
+                            <image>
+                                <Image url="@/images/Open.png" />
+                            </image>
+                        </ImageView>                   
+                    </graphic>
+                </Button>
+                <Separator orientation="VERTICAL"  />
+                <Button onAction="#backward">
+                    <graphic>
+                        <ImageView preserveRatio="true" >
+                            <image>
+                                <Image url="@/images/Backward.png" />
+                            </image>
+                        </ImageView>                   
+                    </graphic>
+                </Button>
+                <Button onAction="#forward">
+                    <graphic>
+                        <ImageView preserveRatio="true">
+                            <image>
+                                <Image url="@/images/Forward.png" />
+                            </image>
+                        </ImageView>                   
+                    </graphic>
+                </Button>
+                <Separator orientation="VERTICAL"  />
+                <Button onAction="#scaleUp">
+                    <graphic>
+                        <ImageView preserveRatio="true">
+                            <image>
+                                <Image url="@/images/ScaleUp.png" />
+                            </image>
+                        </ImageView>                   
+                    </graphic>
+                </Button>
+                <Button onAction="#scaleDown" >
+                    <graphic>
+                        <ImageView preserveRatio="true">
+                            <image>
+                                <Image url="@/images/ScaleDown.png" />
+                            </image>
+                        </ImageView>                   
+                    </graphic>
+                </Button>
+                <Button onAction="#scaleToActualSize">
+                    <graphic>
+                        <ImageView preserveRatio="true">
+                            <image>
+                                <Image url="@/images/NoScale.png" />
+                            </image>
+                        </ImageView>                   
+                    </graphic>
+                </Button>
+                <Separator orientation="VERTICAL"  />
             </children>
         </HBox>
     </top>
@@ -26,7 +79,7 @@
         </HBox>
     </bottom>
     <center>
-        <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED"  vbarPolicy="AS_NEEDED">
+        <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED">
             <content>
                 <StackPane fx:id="stackPane">
                     <children>

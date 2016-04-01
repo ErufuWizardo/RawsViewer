@@ -19,6 +19,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class MainWindowController implements Initializable {
@@ -76,8 +77,29 @@ public class MainWindowController implements Initializable {
     }
 
     @FXML
+    void openImage(ActionEvent e) {
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Image File");
+        final File file = fileChooser.showOpenDialog(stage);
+
+        if (file != null) {
+            fileManager.loadImage(file).ifPresent(imageUpdateConsumer);
+        }
+    }
+
+    @FXML
     void scaleUp(ActionEvent e) {
         scalingManager.scaleUp();
+    }
+
+    @FXML
+    void forward(ActionEvent e) {
+        moveToNextFile();
+    }
+
+    @FXML
+    void backward(ActionEvent e) {
+        moveToPreviousFile();
     }
 
     @FXML
@@ -92,11 +114,11 @@ public class MainWindowController implements Initializable {
                 keyEvent.consume();
                 break;
             case LEFT:
-                fileManager.backward().ifPresent(imageUpdateConsumer);
+                moveToPreviousFile();
                 keyEvent.consume();
                 break;
             case RIGHT:
-                fileManager.forward().ifPresent(imageUpdateConsumer);
+                moveToNextFile();
                 keyEvent.consume();
                 break;
         }
@@ -113,5 +135,13 @@ public class MainWindowController implements Initializable {
         fileManager = new FileManager(new DefaultImageFactory());
         scalingManager = ScalingManager.builder().build(statusText).build(viewPort).build(fileManager).getInstance();
         scalingManager.updateStatusText();
+    }
+
+    private void moveToNextFile() {
+        fileManager.forward().ifPresent(imageUpdateConsumer);
+    }
+
+    private void moveToPreviousFile() {
+        fileManager.backward().ifPresent(imageUpdateConsumer);
     }
 }
