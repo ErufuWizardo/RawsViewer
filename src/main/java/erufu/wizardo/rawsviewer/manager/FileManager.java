@@ -47,8 +47,8 @@ public class FileManager {
             }
         } else if (canBeOpened(file)) {
             currentDirectory = file.getParentFile();
-            filePosition = getFilePosition(file);
             files = Arrays.asList(currentDirectory.listFiles()).stream().filter(element -> canBeOpened(element)).collect(Collectors.toList());
+            filePosition = getFilePosition(file);
             loadImageFromFile(file);
         } else {
             return Optional.empty();

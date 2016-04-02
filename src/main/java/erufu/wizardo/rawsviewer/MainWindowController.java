@@ -18,6 +18,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -36,6 +37,9 @@ public class MainWindowController implements Initializable {
     @FXML
     private ScrollPane scrollPane;
 
+    @FXML
+    private BorderPane borderPane;
+    
     @FXML
     private Label statusText;
 
@@ -79,8 +83,9 @@ public class MainWindowController implements Initializable {
     @FXML
     void openImage(ActionEvent e) {
         final FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Image File");
-        final File file = fileChooser.showOpenDialog(stage);
+        fileChooser.setTitle("Open Image");
+        System.out.println("Stage:" + (Stage)viewPort.getScene().getWindow());
+        final File file = fileChooser.showOpenDialog((Stage)viewPort.getScene().getWindow());
 
         if (file != null) {
             fileManager.loadImage(file).ifPresent(imageUpdateConsumer);
