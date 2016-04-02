@@ -7,6 +7,10 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -25,8 +29,11 @@ import javafx.stage.Stage;
 
 public class MainWindowController implements Initializable {
 
-    private ScalingManager scalingManager;
-    private FileManager fileManager;
+    private FileManager fileManager = new FileManager(new DefaultImageFactory());
+
+    public FileManager getFileManager() {
+        return fileManager;
+    }
 
     @FXML
     private Stage stage;
@@ -39,17 +46,25 @@ public class MainWindowController implements Initializable {
 
     @FXML
     private BorderPane borderPane;
-    
+
     @FXML
     private Label statusText;
+    
+    @FXML
+    private Label imageResolutionLabel;
 
     @FXML
     private ImageView viewPort;
 
+    private ScalingManager scalingManager = new ScalingManager(fileManager);
+
+    public ScalingManager getScalingManager() {
+        return scalingManager;
+    }
+
     private final Consumer<Image> imageUpdateConsumer = (image) -> {
         viewPort.setImage(image);
         scalingManager.updateViewportScale();
-        scalingManager.updateStatusText();
     };
 
     @FXML
@@ -84,8 +99,8 @@ public class MainWindowController implements Initializable {
     void openImage(ActionEvent e) {
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Image");
-        System.out.println("Stage:" + (Stage)viewPort.getScene().getWindow());
-        final File file = fileChooser.showOpenDialog((Stage)viewPort.getScene().getWindow());
+        System.out.println("Stage:" + (Stage) viewPort.getScene().getWindow());
+        final File file = fileChooser.showOpenDialog((Stage) viewPort.getScene().getWindow());
 
         if (file != null) {
             fileManager.loadImage(file).ifPresent(imageUpdateConsumer);
@@ -137,9 +152,7 @@ public class MainWindowController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        fileManager = new FileManager(new DefaultImageFactory());
-        scalingManager = ScalingManager.builder().build(statusText).build(viewPort).build(fileManager).getInstance();
-        scalingManager.updateStatusText();
+        scalingManager.viewPortProperty().setValue(viewPort);
     }
 
     private void moveToNextFile() {

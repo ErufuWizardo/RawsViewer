@@ -1,6 +1,9 @@
 package erufu.wizardo.rawsviewer.manager;
 
-import javafx.scene.control.Label;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.ImageView;
 import javafx.scene.transform.Scale;
 
@@ -8,18 +11,56 @@ public class ScalingManager {
 
     private double scaleFactor = 1;
 
-    private final ImageView viewPort;
-    private final Label statusText;
     private final FileManager fileManager;
 
     private static final double MINIMUM_SCALE = 0.05;
     private static final double MAXIMUM_SCALE = 10;
     private static final double DEFAULT_SCALE = 1;
 
-    public ScalingManager(ImageView viewPort, Label statusText, FileManager fileManager) {
-        this.viewPort = viewPort;
-        this.statusText = statusText;
+    private final ObjectProperty<ImageView> viewPort = new SimpleObjectProperty<>();
+
+    public ImageView getViewPort() {
+        return viewPort.get();
+    }
+
+    public void setViewPort(ImageView value) {
+        viewPort.set(value);
+    }
+
+    public ObjectProperty viewPortProperty() {
+        return viewPort;
+    }
+
+    private final ReadOnlyStringWrapper imageResolution = new ReadOnlyStringWrapper(BLANK_VALUE);
+    private static final String BLANK_VALUE = " - ";
+
+    public ReadOnlyStringProperty imageResolutionProperty() {
+        return imageResolution.getReadOnlyProperty();
+    }
+
+    public String getImageResolution() {
+        return imageResolution.get();
+    }
+
+    private final ReadOnlyStringWrapper scaleStatus = new ReadOnlyStringWrapper(BLANK_VALUE);
+
+    public ReadOnlyStringProperty scaleStatusProperty() {
+        return scaleStatus.getReadOnlyProperty();
+    }
+
+    public String getScaleStatus() {
+        return scaleStatus.get();
+    }
+
+    public ScalingManager(FileManager fileManager) {
         this.fileManager = fileManager;
+        viewPort.addListener(observable -> {
+            updateStatusText();
+            if (viewPort.isNotNull().get()) {
+                viewPort.get().imageProperty().addListener(value -> updateStatusText());
+            }
+        });
+
     }
 
     public void scaleDown() {
@@ -53,58 +94,35 @@ public class ScalingManager {
     }
 
     public void updateViewportScale() {
-        if (viewPort.getImage() != null) {
-            viewPort.getTransforms().clear();
-            viewPort.getTransforms().add(new Scale(scaleFactor, scaleFactor, 0, 0));
+        if (viewPort.isNotNull().get() && viewPort.get().getImage() != null) {
+            viewPort.get().getTransforms().clear();
+            viewPort.get().getTransforms().add(new Scale(scaleFactor, scaleFactor, 0, 0));
         }
     }
 
-    public void updateStatusText() {
+    private void updateStatusText() {
         final double scalePercents = scaleFactor * 100;
-        final StringBuffer status = new StringBuffer();
+        final StringBuffer zoom = new StringBuffer();
         if (fileManager.isFileLoaded()) {
-            status.append(String.format("Current scale: %.2f%% ", scalePercents));
+            zoom.append(String.format("Zoom: %.2f%% ", scalePercents));
+        } else {
+            zoom.append(BLANK_VALUE);
         }
-        status.append(fileManager.getFilePath());
-        if (viewPort.imageProperty().isNotNull().get()) {
-            status.append(" Original size:");
-            status.append(String.format("%.0f", viewPort.getImage().getWidth()));
-            status.append(" x ").append(String.format("%.0f", viewPort.getImage().getHeight()));
+        scaleStatus.set(zoom.toString());
 
-            status.append(" Resized to:");
-            status.append(String.format("%.2f", viewPort.boundsInParentProperty().get().getWidth()));
-            status.append(" x ").append(String.format("%.2f", viewPort.boundsInParentProperty().get().getHeight()));
-        }
-        statusText.setText(status.toString());
-    }
+        if (viewPort.isNotNull().get() && viewPort.get().getImage() != null) {
+            final StringBuffer imageResolutionText = new StringBuffer();
+            imageResolutionText.append("Resolution: ");
+            imageResolutionText.append(String.format("%.0f", viewPort.get().getImage().getWidth()));
+            imageResolutionText.append(":").append(String.format("%.0f", viewPort.get().getImage().getHeight()));
 
-    public static ScalingManagerBuilder builder() {
-        return new ScalingManagerBuilder();
-    }
+            imageResolutionText.append(" Zoom: ");
+            imageResolutionText.append(String.format("%.2f", viewPort.get().boundsInParentProperty().get().getWidth()));
+            imageResolutionText.append(":").append(String.format("%.2f", viewPort.get().boundsInParentProperty().get().getHeight()));
+            imageResolutionText.append("");
 
-    public static class ScalingManagerBuilder {
-
-        private Label statusText;
-        private ImageView viewPort;
-        private FileManager fileManager;
-
-        public ScalingManagerBuilder build(ImageView viewPort) {
-            this.viewPort = viewPort;
-            return this;
-        }
-
-        public ScalingManagerBuilder build(Label statusText) {
-            this.statusText = statusText;
-            return this;
-        }
-
-        public ScalingManagerBuilder build(FileManager fileManager) {
-            this.fileManager = fileManager;
-            return this;
-        }
-
-        public ScalingManager getInstance() {
-            return new ScalingManager(viewPort, statusText, fileManager);
+            imageResolution.set(imageResolutionText.toString());
+            System.out.println(imageResolution.get());
         }
     }
 }
