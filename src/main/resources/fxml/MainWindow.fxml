@@ -13,17 +13,17 @@
             <children>
                 <Button onAction="#openImage">
                     <graphic>
-                        <ImageView preserveRatio="true">
+                        <ImageView fitHeight="32" fitWidth="32" preserveRatio="true">
                             <image>
                                 <Image url="@/images/Open.png" />
                             </image>
                         </ImageView>                   
                     </graphic>
                 </Button>
-                <Separator orientation="VERTICAL"  />
+                <Separator orientation="VERTICAL" />
                 <Button onAction="#backward">
                     <graphic>
-                        <ImageView preserveRatio="true" >
+                        <ImageView fitHeight="32" fitWidth="32" preserveRatio="true">
                             <image>
                                 <Image url="@/images/Backward.png" />
                             </image>
@@ -32,26 +32,26 @@
                 </Button>
                 <Button onAction="#forward">
                     <graphic>
-                        <ImageView preserveRatio="true">
+                        <ImageView fitHeight="32" fitWidth="32" preserveRatio="true">
                             <image>
                                 <Image url="@/images/Forward.png" />
                             </image>
                         </ImageView>                   
                     </graphic>
                 </Button>
-                <Separator orientation="VERTICAL"  />
+                <Separator orientation="VERTICAL" />
                 <Button onAction="#scaleUp">
                     <graphic>
-                        <ImageView preserveRatio="true">
+                        <ImageView fitHeight="32" fitWidth="32" preserveRatio="true">
                             <image>
                                 <Image url="@/images/ScaleUp.png" />
                             </image>
                         </ImageView>                   
                     </graphic>
                 </Button>
-                <Button onAction="#scaleDown" >
+                <Button onAction="#scaleDown">
                     <graphic>
-                        <ImageView preserveRatio="true">
+                        <ImageView fitHeight="32" fitWidth="32" preserveRatio="true">
                             <image>
                                 <Image url="@/images/ScaleDown.png" />
                             </image>
@@ -60,21 +60,27 @@
                 </Button>
                 <Button onAction="#scaleToActualSize">
                     <graphic>
-                        <ImageView preserveRatio="true">
+                        <ImageView fitHeight="32" fitWidth="32" preserveRatio="true">
                             <image>
                                 <Image url="@/images/NoScale.png" />
                             </image>
                         </ImageView>                   
                     </graphic>
                 </Button>
-                <Separator orientation="VERTICAL"  />
+                <Separator orientation="VERTICAL" />
             </children>
         </HBox>
     </top>
     <bottom>
         <HBox BorderPane.alignment="CENTER">
             <children>
-                <Label fx:id="statusText" />
+                <Label text="${controller.scalingManager.scaleStatus}"/>
+                <Separator orientation="VERTICAL" />
+                <Label text="${controller.fileManager.currentFileName}" />
+                <Separator orientation="VERTICAL" />
+                <Label text="${controller.scalingManager.imageResolution}" />
+                <Separator orientation="VERTICAL" />
+                <Label text="${controller.fileManager.filePositionText}" />
             </children>
         </HBox>
     </bottom>
