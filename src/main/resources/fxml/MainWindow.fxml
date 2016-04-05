@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -7,9 +8,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onKeyPressed="#onKeyPressed" prefHeight="250.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="erufu.wizardo.rawsviewer.MainWindowController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onDragDropped="#onDragDropped" onDragOver="#onDragOver" onKeyPressed="#onKeyPressed" prefHeight="250.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="erufu.wizardo.rawsviewer.MainWindowController">
     <top>
-        <HBox BorderPane.alignment="CENTER">
+        <HBox BorderPane.alignment="CENTER" alignment="CENTER_LEFT"  >
             <children>
                 <Button onAction="#openImage">
                     <graphic>
@@ -21,6 +22,21 @@
                     </graphic>
                 </Button>
                 <Separator orientation="VERTICAL" />
+                                <ImageView fitHeight="32" fitWidth="32" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/Files.png" />
+                            </image>
+                        </ImageView>   
+                <TextField prefHeight="16" prefWidth="34.0" text="0" >
+                    <font>
+                        <Font size="17.0" />
+                    </font>
+                </TextField>
+                <Label prefHeight="16" prefWidth="34.0" text="/0">
+                    <font>
+                        <Font size="17.0" />
+                    </font>
+                </Label>
                 <Button onAction="#backward">
                     <graphic>
                         <ImageView fitHeight="32" fitWidth="32" preserveRatio="true">
@@ -68,13 +84,50 @@
                     </graphic>
                 </Button>
                 <Separator orientation="VERTICAL" />
+                <ToggleButton fx:id="darkenButton" onAction="#darken">
+                    <graphic>
+                        <ImageView fitHeight="32" fitWidth="32" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/Darken_v2.png" />
+                            </image>
+                        </ImageView>                   
+                    </graphic>
+                </ToggleButton>
+                <ToggleButton prefHeight="32" prefWidth="5"  fx:id="darkenOptionsButton">
+                    <graphic>
+                        <ImageView fitHeight="32" fitWidth="5"  preserveRatio="true">
+                            <image>
+                                <Image url="@/images/OptionsPanel_v3.png" />
+                            </image>
+                        </ImageView>                   
+                    </graphic>
+                </ToggleButton>     
+                <Separator orientation="VERTICAL" />                            
+                <ToggleButton fx:id="adjustmentsButton">
+                    <graphic>
+                        <ImageView fitHeight="32" fitWidth="32" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/ImageAdjustments.png" />
+                            </image>
+                        </ImageView>                   
+                    </graphic>
+                </ToggleButton> 
+                <ToggleButton fx:id="adjustmentsOptionsButton">
+                    <graphic>
+                        <ImageView fitHeight="32" fitWidth="16" preserveRatio="true">
+                            <image>
+                                <Image url="@/images/OptionsPanel.png" />
+                            </image>
+                        </ImageView>                   
+                    </graphic>
+                </ToggleButton>                                 
             </children>
         </HBox>
     </top>
     <bottom>
         <HBox BorderPane.alignment="CENTER">
             <children>
-                <Label text="${controller.scalingManager.scaleStatus}"/>
+                <Label text="${controller.scalingManager.scaleStatus}" />
                 <Separator orientation="VERTICAL" />
                 <Label text="${controller.fileManager.currentFileName}" />
                 <Separator orientation="VERTICAL" />

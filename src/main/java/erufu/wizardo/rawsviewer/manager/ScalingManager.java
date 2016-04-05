@@ -64,7 +64,7 @@ public class ScalingManager {
     }
 
     public void scaleDown() {
-        final double newScaleFactor = scaleFactor * 0.78;
+        final double newScaleFactor = scaleFactor * 0.90;
 
         if (newScaleFactor > MINIMUM_SCALE) {
             scaleFactor = newScaleFactor;
@@ -76,7 +76,7 @@ public class ScalingManager {
     }
 
     public void scaleUp() {
-        final double newScaleFactor = scaleFactor * 1.33;
+        final double newScaleFactor = scaleFactor * 1.1;
 
         if (newScaleFactor < MAXIMUM_SCALE) {
             scaleFactor = newScaleFactor;

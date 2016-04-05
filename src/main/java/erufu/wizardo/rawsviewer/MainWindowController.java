@@ -3,29 +3,40 @@ package erufu.wizardo.rawsviewer;
 import erufu.wizardo.rawsviewer.manager.DefaultImageFactory;
 import erufu.wizardo.rawsviewer.manager.FileManager;
 import erufu.wizardo.rawsviewer.manager.ScalingManager;
+import java.awt.AWTException;
+import java.awt.Robot;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
+import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.ColorInput;
+import javafx.scene.effect.Effect;
+import javafx.scene.effect.SepiaTone;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class MainWindowController implements Initializable {
 
@@ -36,25 +47,16 @@ public class MainWindowController implements Initializable {
     }
 
     @FXML
-    private Stage stage;
+    private ToggleButton darkenButton;
+
+    @FXML
+    private ImageView viewPort;
 
     @FXML
     private StackPane stackPane;
 
     @FXML
     private ScrollPane scrollPane;
-
-    @FXML
-    private BorderPane borderPane;
-
-    @FXML
-    private Label statusText;
-    
-    @FXML
-    private Label imageResolutionLabel;
-
-    @FXML
-    private ImageView viewPort;
 
     private ScalingManager scalingManager = new ScalingManager(fileManager);
 
@@ -143,6 +145,55 @@ public class MainWindowController implements Initializable {
                 break;
         }
 
+    }
+
+    @FXML
+    void darken(ActionEvent e) {
+        if (darkenButton.selectedProperty().get()) {
+            final Stage stage = new Stage(StageStyle.UNDECORATED);
+
+            final Slider slider = new Slider(0d, 1d, 0.5d);
+            slider.setMajorTickUnit(0.25d);
+            slider.setBlockIncrement(0.1d);
+
+            final Pane pane = new Pane();
+            pane.getChildren().add(slider);
+            stage.setScene(new Scene(pane));
+            final Point2D buttonCoords = darkenButton.getParent().localToScreen(darkenButton.getBoundsInParent().getMinX(), darkenButton.getBoundsInParent().getMaxY());
+
+            stage.setX(buttonCoords.getX());
+            stage.setY(buttonCoords.getY());
+            stage.show();
+
+//            new Robot().mouseMove( x, y );
+            stage.setX(buttonCoords.getX() - (stage.getWidth() - darkenButton.getWidth()) / 2);
+            stage.setY(buttonCoords.getY());
+            try {
+                new Robot().mouseMove((int) (stage.getX() + stage.getWidth() / 2), (int) (stage.getY() + stage.getHeight() / 2));
+            } catch (AWTException ex) {
+            }
+
+            stage.focusedProperty().addListener((observable, oldValue, newValue) -> stage.close());
+            slider.hoverProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue.booleanValue()) {
+                    stage.close();
+                }
+            });
+            final Blend blend = new Blend();
+            blend.setMode(BlendMode.DARKEN);
+
+            blend.opacityProperty().bind(slider.valueProperty());
+            final ColorInput colorInput = new ColorInput();
+            colorInput.setPaint(Color.GRAY);
+            colorInput.setX(0);
+            colorInput.setY(0);
+            colorInput.widthProperty().bind(scrollPane.widthProperty());
+            colorInput.heightProperty().bind(scrollPane.heightProperty());
+            blend.setTopInput(colorInput);
+            scrollPane.setEffect(blend);
+        } else {
+            scrollPane.setEffect(null);
+        }
     }
 
     @FXML

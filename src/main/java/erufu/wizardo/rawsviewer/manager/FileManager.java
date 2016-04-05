@@ -149,17 +149,13 @@ public class FileManager {
         final StringBuffer filePositionTextValue = new StringBuffer();
         filePositionTextValue.append("File# ");
 
-        if (files.size() == 0) {
+        if (files.isEmpty()) {
             filePositionTextValue.append(BLANK_FILE_POSITION);
         } else {
             filePositionTextValue.append(filePosition + 1).append("/").append(files.size() + 1);
         }
 
         filePositionText.set(filePositionTextValue.toString());
-
-        // imageResolution.append(" Resized to:");
-        // imageResolution.append(String.format("%.2f", viewPort.boundsInParentProperty().get().getWidth()));
-        // imageResolution.append(" x ").append(String.format("%.2f", viewPort.boundsInParentProperty().get().getHeight()));
     }
     
 
